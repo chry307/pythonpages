@@ -14,8 +14,7 @@
     <canvas id="gameCanvas" width="400" height="400"></canvas>
     
     <script type="text/python">
-        from browser import document, window
-        import random
+        from browser import document, window, random
 
         # 游戏设置
         map_size = 5  # 5x5 地图
@@ -57,17 +56,6 @@
                     ctx.fillRect(x * cell_size, y * cell_size, cell_size, cell_size)
                     ctx.strokeRect(x * cell_size, y * cell_size, cell_size, cell_size)
 
-        def draw_battle():
-            """ 绘制战斗界面 """
-            ctx.clearRect(0, 0, canvas.width, canvas.height)
-            ctx.fillStyle = "white"
-            ctx.fillRect(0, 0, canvas.width, canvas.height)
-            ctx.fillStyle = "black"
-            ctx.font = "20px Arial"
-            ctx.fillText(f"玩家 HP: {player_health}", 10, 30)
-            ctx.fillText(f"怪物 HP: {monster_health}", 10, 60)
-            ctx.fillText("按 'A' 攻击怪物", 10, 90)
-
         def move_player(event):
             """ 监听键盘事件来移动玩家 """
             global player_x, player_y
@@ -105,6 +93,17 @@
 
             window.bind("keydown", lambda event: attack() if event.key == "a" else None)
             draw_battle()
+
+        def draw_battle():
+            """ 绘制战斗界面 """
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            ctx.fillStyle = "white"
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+            ctx.fillStyle = "black"
+            ctx.font = "20px Arial"
+            ctx.fillText(f"玩家 HP: {player_health}", 10, 30)
+            ctx.fillText(f"怪物 HP: {monster_health}", 10, 60)
+            ctx.fillText("按 'A' 攻击怪物", 10, 90)
 
         # 绑定方向键事件
         window.bind("keydown", move_player)
