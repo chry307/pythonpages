@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Python H5 解谜游戏</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.10.5/brython.min.js"></script>
+    <style>
+        canvas { border: 2px solid black; }
+    </style>
+</head>
+<body onload="brython()">
+    <h1>迷宫解谜游戏</h1>
+    <p>使用键盘 ↑ ↓ ← → 移动到出口 "E"</p>
+    <canvas id="gameCanvas" width="300" height="300"></canvas>
+
+    <script type="text/python">
+        from browser import document, window
+        import random
+
+        # 迷宫地图（5x5）
+        maze = [
+            ["P", ".", ".", "X", "."],
+            ["X", "X", ".", "X", "."],
+            [".", ".", ".", ".", "."],
+            ["X", "X", "X", "X", "."],
+            ["X", "X", ".", ".", "E"]
+        ]
+
+        # 玩家位置
+        player_x, player_y = 0, 0
+
+        # 画布
+        canvas = document["gameCanvas"]
+        ctx = canvas.getContext("2d")
+        cell_size = 60  # 每个格子的大小
+
+        def draw_maze():
+            """ 绘制迷宫 """
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            for y in range(5):
+                for x in range(5):
+                    if maze[y][x] == "X":
+                        ctx.fillStyle = "black"
+                    elif maze[y][x] == "E":
+                        ctx.fillStyle = "green"
+                    elif x == player_x and y == player_y:
+                        ctx.fillStyle = "blue"
+                    else:
+                        ctx.fillStyle = "white"
+
+                    ctx.fillRect(x * cell_size, y * cell_size, cell_size, cell_size)
+                    ctx.strokeRect(x * cell_size, y * cell_size, cell_size, cell_size)
+
+        def move_player(event):
+            """ 监听键盘事件 """
+            global player_x, player_y
+
+            key = event.key
+            new_x, new_y = player_x, player_y
+
+            if key == "ArrowUp": new_y -= 1
+            elif key == "ArrowDown": new_y += 1
+            elif key == "ArrowLeft": new_x -= 1
+            elif key == "ArrowRight": new_x += 1
+
+            # 检查是否超出边界或撞墙
+            if 0 <= new_x < 5 and 0 <= new_y < 5 and maze[new_y][new_x] != "X":
+                player_x, player_y = new_x, new_y
+
+            # 检查是否到达终点
+            if maze[player_y][player_x] == "E":
+                window.alert("🎉 恭喜！你成功解开迷宫！")
+
+            draw_maze()
+
+        # 绑定事件监听
+        window.bind("keydown", move_player)
+
+        # 初次绘制迷宫
+        draw_maze()
+    </script>
+</body>
+</html>
