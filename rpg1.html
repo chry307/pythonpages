@@ -93,7 +93,7 @@
             """ 简单的回合制战斗 """
             global player_health, monster_health
             def attack():
-                nonlocal player_health, monster_health
+                global player_health, monster_health
                 monster_health -= player_attack
                 player_health -= monster_attack
                 if monster_health <= 0:
